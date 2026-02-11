@@ -2333,7 +2333,7 @@
       }, 120000);
     }
     
-// === Medicine Dictionary - COMPLETE ===
+// === Medicine Dictionary - COMPLETE (Shows all items below search) ===
 function initDictionary() {
   const medicines = [
     {
@@ -2436,15 +2436,49 @@ function initDictionary() {
   const medicineList = document.getElementById('medicineList');
   const medicineSearch = document.getElementById('medicineSearch');
 
-  function renderMedicines(filter = '') {
+  // Function to show all medicines (no filter)
+  function showAllMedicines() {
+    medicineList.innerHTML = '';
+    
+    medicines.forEach(category => {
+      const catDiv = document.createElement('div');
+      catDiv.className = 'medicine-category';
+
+      const header = document.createElement('div');
+      header.className = 'category-header';
+      header.innerHTML = `
+        <span>${category.category} <span class="translation">${category.categoryTranslation}</span></span>
+        <span><i class="fas fa-chevron-down"></i></span>
+      `;
+
+      const content = document.createElement('div');
+      content.className = 'category-content';
+      content.style.display = 'block'; // Always visible by default
+
+      category.items.forEach(item => {
+        const medDiv = document.createElement('div');
+        medDiv.className = 'medicine-item';
+
+        medDiv.innerHTML = `
+          <h4>${item.name} <span class="translation">(${item.name})</span></h4>
+          <p class="step-text">${item.description}</p>
+          <p class="step-translation">${item.descriptionTranslation}</p>
+        `;
+
+        content.appendChild(medDiv);
+      });
+
+      catDiv.appendChild(header);
+      catDiv.appendChild(content);
+      medicineList.appendChild(catDiv);
+    });
+  }
+
+  // Filter medicines based on search
+  function filterMedicines(filter) {
     medicineList.innerHTML = '';
     const lowerFilter = filter.toLowerCase();
     let foundAny = false;
-
-    if (lowerFilter.length < 1) {
-      medicineList.innerHTML = '<div style="text-align: center; padding: 40px; color: #5a6c7d;"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i><p style="margin-bottom: 8px;">Start typing to search for medicines.</p><p class="translation" style="margin: 0;">(Mangrugi nga ag-type tapno agbiruk ti agas.)</p></div>';
-      return;
-    }
 
     medicines.forEach(category => {
       const filteredItems = category.items.filter(item => {
@@ -2452,13 +2486,9 @@ function initDictionary() {
         const lowerDesc = item.description.toLowerCase();
         const lowerDescTrans = item.descriptionTranslation.toLowerCase();
         
-        const exactMatch = lowerName === lowerFilter;
-        const substringMatch = 
-          lowerName.includes(lowerFilter) ||
-          lowerDesc.includes(lowerFilter) ||
-          lowerDescTrans.includes(lowerFilter);
-        
-        return exactMatch || substringMatch;
+        return lowerName.includes(lowerFilter) || 
+               lowerDesc.includes(lowerFilter) || 
+               lowerDescTrans.includes(lowerFilter);
       });
 
       if (filteredItems.length > 0) {
@@ -2475,7 +2505,7 @@ function initDictionary() {
 
         const content = document.createElement('div');
         content.className = 'category-content';
-        content.style.display = 'block'; // Always visible when searching
+        content.style.display = 'block';
 
         filteredItems.forEach(item => {
           const medDiv = document.createElement('div');
@@ -2496,8 +2526,8 @@ function initDictionary() {
       }
     });
 
-    if (!foundAny && lowerFilter.length >= 1) {
-      medicineList.innerHTML = '<div style="text-align: center; padding: 40px; color: #5a6c7d;"><i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i><p style="margin-bottom: 8px;">No medicines found matching your search.</p><p class="translation" style="margin: 0;">(Awan ti agas a kapada ti inaramid mo a panagbiruk.)</p></div>';
+    if (!foundAny) {
+      medicineList.innerHTML = '<p style="color:#5a6c7d; text-align:center; padding:20px 0;">No medicines found matching your search. <span class="translation">(Awan ti agas a kapada ti inaramid mo a panagbiruk.)</span></p>';
     }
   }
 
@@ -2517,14 +2547,20 @@ function initDictionary() {
     }
   });
 
+  // Search input event
   medicineSearch.addEventListener('input', () => {
-    renderMedicines(medicineSearch.value);
+    if (medicineSearch.value.trim() === '') {
+      showAllMedicines(); // Show all when search is empty
+    } else {
+      filterMedicines(medicineSearch.value);
+    }
   });
 
-  renderMedicines();
+  // Initial load - show all medicines
+  showAllMedicines();
 }
 
-// === Emergency Guide (Step-by-Step) - COMPLETE ===
+// === Emergency Guide (Step-by-Step) - COMPLETE (Shows all emergencies below search) ===
 function initEmergency() {
   const emergencies = [
     {
@@ -2620,15 +2656,47 @@ function initEmergency() {
   const emergencyList = document.getElementById('emergencyList');
   const emergencySearch = document.getElementById('emergencySearch');
 
-  function renderEmergencies(filter = '') {
+  // Function to show all emergencies
+  function showAllEmergencies() {
+    emergencyList.innerHTML = '';
+    
+    emergencies.forEach(emergency => {
+      const card = document.createElement('div');
+      card.className = 'emergency-card';
+
+      const title = document.createElement('h3');
+      title.innerHTML = `
+        ${emergency.title} <span class="translation">${emergency.titleTranslation}</span>
+        <span><i class="fas fa-chevron-down"></i></span>
+      `;
+
+      const stepsDiv = document.createElement('div');
+      stepsDiv.className = 'emergency-steps';
+      stepsDiv.style.display = 'block'; // Always visible by default
+
+      const ol = document.createElement('ol');
+      emergency.steps.forEach((step, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span class="step-text">${step.text}</span>
+          <span class="step-translation">${step.translation}</span>
+          ${step.image ? `<img src="${step.image}" alt="Step ${index + 1} for ${emergency.title}: ${step.text.substring(0, 50)}..." class="step-image">` : ''}
+        `;
+        ol.appendChild(li);
+      });
+
+      stepsDiv.appendChild(ol);
+      card.appendChild(title);
+      card.appendChild(stepsDiv);
+      emergencyList.appendChild(card);
+    });
+  }
+
+  // Filter emergencies based on search
+  function filterEmergencies(filter) {
     emergencyList.innerHTML = '';
     const lowerFilter = filter.toLowerCase();
     let foundAny = false;
-
-    if (lowerFilter.length < 2) {
-      emergencyList.innerHTML = '<div style="text-align: center; padding: 40px; color: #5a6c7d;"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i><p style="margin-bottom: 8px;">Start typing to search for emergency guides.</p><p class="translation" style="margin: 0;">(Mangrugi nga ag-type tapno agbiruk ti bayabay para iti Saan nga Mapakpakadaan a Pasamak.)</p></div>';
-      return;
-    }
 
     emergencies.forEach(emergency => {
       const matchesTitle = emergency.title.toLowerCase().includes(lowerFilter) ||
@@ -2653,7 +2721,7 @@ function initEmergency() {
 
       const stepsDiv = document.createElement('div');
       stepsDiv.className = 'emergency-steps';
-      stepsDiv.style.display = 'block'; // Always visible when searching
+      stepsDiv.style.display = 'block';
 
       const ol = document.createElement('ol');
       emergency.steps.forEach((step, index) => {
@@ -2672,8 +2740,8 @@ function initEmergency() {
       emergencyList.appendChild(card);
     });
 
-    if (!foundAny && lowerFilter.length >= 2) {
-      emergencyList.innerHTML = '<div style="text-align: center; padding: 40px; color: #5a6c7d;"><i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i><p style="margin-bottom: 8px;">No emergencies found matching your search.</p><p class="translation" style="margin: 0;">(Awan ti emerhensya a kapada ti inaramid mo a panagbiruk.)</p></div>';
+    if (!foundAny) {
+      emergencyList.innerHTML = '<p style="color:#5a6c7d; text-align:center; padding:20px 0;">No emergencies found matching your search. <span class="translation">(Awan ti emerhensya a kapada ti inaramid mo a panagbiruk.)</span></p>';
     }
   }
 
@@ -2693,11 +2761,17 @@ function initEmergency() {
     }
   });
 
+  // Search input event
   emergencySearch.addEventListener('input', () => {
-    renderEmergencies(emergencySearch.value);
+    if (emergencySearch.value.trim() === '') {
+      showAllEmergencies(); // Show all when search is empty
+    } else {
+      filterEmergencies(emergencySearch.value);
+    }
   });
 
-  renderEmergencies();
+  // Initial load - show all emergencies
+  showAllEmergencies();
 }
     
     // ===========================
