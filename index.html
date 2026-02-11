@@ -2333,262 +2333,372 @@
       }, 120000);
     }
     
-    // ===========================
-    // MEDICINE DICTIONARY
-    // ===========================
-    function initDictionary() {
-      const medicines = [
-        {
-          category: 'Pain Relievers',
-          categoryTranslation: '(Pampababa ti Sakit)',
-          items: [
-            { name: 'Ibuprofen', description: 'Helps with pain, fever, and swelling. Good for headaches and muscle aches.', descriptionTranslation: '(Makatulong iti sakit, gurigor, ken panagngelngel. Maayo para iti sakit ti bungo ken sakit ti muscle.)' },
-            { name: 'Acetaminophen', description: 'Reduces pain and fever. Common for colds, flu, and general aches.', descriptionTranslation: '(Pabassiten ti sakit ken gurigor. Kadawyan para iti sipon, trangkaso, ken sabsabali a sakit.)' },
-            { name: 'Aspirin', description: 'Used for pain, fever, and swelling. Can also help prevent blood clots (ask a doctor).', descriptionTranslation: '(Usaren para iti sakit, gurigor, ken panagngelngel. Makatulong met a manglapped iti panagbekkel ti dara (agsaludsod iti doktor).)' },
-            { name: 'Alaxan', description: 'Relieves body pain and inflammation from its source. Take as directed.', descriptionTranslation: '(Makatulong a mangpalpak ti sakit ti bagi ken inflammation. Agtumar kas imbilin.)' },
-            { name: 'Bioflu', description: 'Helps relieve fever, cough, runny nose, and body pain.', descriptionTranslation: '(Tumulong nga mangbabaw ti gurigor, uyek, sipon, ken sakit ti bagbagi.)' }
-          ]
-        },
-        {
-          category: 'Blood Pressure Medications',
-          categoryTranslation: '(Agas para iti Alta Presyon)',
-          items: [
-            { name: 'Lisinopril', description: 'Helps relax blood vessels to lower high blood pressure. Take as directed by your doctor.', descriptionTranslation: '(Makatulong a mangpalukneng kadagiti dara ti urat tapno pabassiten ti alta presyon. Agtumar kas imbilin ti doktor.)' },
-            { name: 'Amlodipine', description: 'Works by relaxing blood vessels, making it easier for your heart to pump blood. Used for high blood pressure and chest pain.', descriptionTranslation: '(Agtrabaho babaen ti panangpalukneng kadagiti urat ti dara, a mangpalaka iti panagbomba ti puso iti dara. Usaren para iti alta presyon ken sakit ti barukong.)' },
-            { name: 'Losartan', description: 'Helps relax blood vessels to lower high blood pressure. Important to take regularly.', descriptionTranslation: '(Makatulong a mangpalukneng kadagiti urat ti dara tapno pabassiten ti alta presyon. Importante a regular nga agtumar.)' },
-            { name: 'Calcibloc', description: 'Helps to lower blood pressure and treat heart problems. Consult a doctor for detailed usage.', descriptionTranslation: '(Makatulong a pabassiten ti presyon ti dara ken mangagas kadagiti problema ti puso. Agsaludsod iti doktor para iti naimbag a panagusar.)' }
-          ]
-        },
-        {
-          category: 'Diabetes Medications',
-          categoryTranslation: '(Agas para iti Diabetes)',
-          items: [
-            { name: 'Metformin', description: 'Helps your body use insulin better and lowers sugar made by your liver. For type 2 diabetes.', descriptionTranslation: '(Makatulong iti bagim a nasaysayaat nga usaren ti insulin ken pabassiten ti asukar nga aramiden ti ataymo. Para iti type 2 diabetes.)' },
-            { name: 'Insulin', description: 'A hormone that helps sugar get into your cells for energy. Used for both type 1 and some type 2 diabetes.', descriptionTranslation: '(Maysa a hormone a makatulong iti asukar a sumrek kadagiti selulam para iti enerhiya. Usaren para iti type 1 ken dadduma a type 2 diabetes.)' },
-            { name: 'Gliclazide', description: 'Helps control blood sugar levels for people with type 2 diabetes. Do not skip meals while taking it. Consult a doctor for detailed usage.', descriptionTranslation: '(Makatulong a mangkontrol ti blood sugar levels para kadagiti tao nga adda type 2 diabetes. Saan a laktawan ti makan agraman no agtumar. Agsaludsod iti doktor para iti naimbag a panagusar.)' }
-          ]
-        }
-      ];
-      
-      const medicineList = document.getElementById('medicineList');
-      const medicineSearch = document.getElementById('medicineSearch');
-      
-      function renderMedicines(filter = '') {
-        medicineList.innerHTML = '';
-        const lowerFilter = filter.toLowerCase();
-        
-        if (!filter) {
-          // Show categories when no filter
-          medicines.forEach(category => {
-            const catDiv = document.createElement('div');
-            catDiv.className = 'medicine-category';
-            
-            const header = document.createElement('div');
-            header.className = 'category-header';
-            header.innerHTML = `
-              <span>${category.category} <span class="translation">${category.categoryTranslation}</span></span>
-              <span><i class="fas fa-chevron-down"></i></span>
-            `;
-            
-            const content = document.createElement('div');
-            content.className = 'category-content';
-            
-            category.items.forEach(item => {
-              const medDiv = document.createElement('div');
-              medDiv.className = 'medicine-item';
-              
-              medDiv.innerHTML = `
-                <h4>${item.name}</h4>
-                <p class="step-text">${item.description}</p>
-                <p class="step-translation">${item.descriptionTranslation}</p>
-              `;
-              
-              content.appendChild(medDiv);
-            });
-            
-            catDiv.appendChild(header);
-            catDiv.appendChild(content);
-            medicineList.appendChild(catDiv);
-            
-            // Toggle functionality
-            header.addEventListener('click', () => {
-              content.style.display = content.style.display === 'none' ? 'block' : 'none';
-              header.querySelector('.fa-chevron-down').style.transform = 
-                content.style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)';
-            });
-          });
-          return;
-        }
-        
-        // Filtered view
-        let foundAny = false;
-        medicines.forEach(category => {
-          const filteredItems = category.items.filter(item => {
-            const lowerName = item.name.toLowerCase();
-            const lowerDesc = item.description.toLowerCase();
-            const lowerDescTrans = item.descriptionTranslation.toLowerCase();
-            
-            return lowerName.includes(lowerFilter) ||
-                   lowerDesc.includes(lowerFilter) ||
-                   lowerDescTrans.includes(lowerFilter);
-          });
-          
-          if (filteredItems.length > 0) {
-            foundAny = true;
-            const catDiv = document.createElement('div');
-            catDiv.className = 'medicine-category';
-            
-            const header = document.createElement('div');
-            header.className = 'category-header';
-            header.innerHTML = `
-              <span>${category.category} <span class="translation">${category.categoryTranslation}</span></span>
-              <span><i class="fas fa-chevron-down"></i></span>
-            `;
-            
-            const content = document.createElement('div');
-            content.className = 'category-content';
-            content.style.display = 'block'; // Always show in search results
-            
-            filteredItems.forEach(item => {
-              const medDiv = document.createElement('div');
-              medDiv.className = 'medicine-item';
-              
-              medDiv.innerHTML = `
-                <h4>${item.name}</h4>
-                <p class="step-text">${item.description}</p>
-                <p class="step-translation">${item.descriptionTranslation}</p>
-              `;
-              
-              content.appendChild(medDiv);
-            });
-            
-            catDiv.appendChild(header);
-            catDiv.appendChild(content);
-            medicineList.appendChild(catDiv);
-            
-            header.querySelector('.fa-chevron-down').style.transform = 'rotate(180deg)';
-          }
-        });
-        
-        if (!foundAny) {
-          medicineList.innerHTML = '<div class="text-center" style="padding: 40px; color: #666;"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px;"></i><p>No medicines found. Try a different search.</p><p class="translation">(Awan ti nabirukan nga agas. Padasen ti sabali a panagbiruk.)</p></div>';
-        }
-      }
-      
-      medicineSearch.addEventListener('input', () => {
-        renderMedicines(medicineSearch.value);
-      });
-      
-      renderMedicines();
+// === Medicine Dictionary - COMPLETE ===
+function initDictionary() {
+  const medicines = [
+    {
+      category: 'Pain Relievers',
+      categoryTranslation: '(Pampababa ti Sakit)',
+      items: [
+        { name: 'Ibuprofen', description: 'Helps with pain, fever, and swelling. Good for headaches and muscle aches.', descriptionTranslation: '(Makatulong iti sakit, gurigor, ken panagngelngel. Maayo para iti sakit ti bungo ken sakit ti muscle.)' },
+        { name: 'Acetaminophen', description: 'Reduces pain and fever. Common for colds, flu, and general aches.', descriptionTranslation: '(Pabassiten ti sakit ken gurigor. Kadawyan para iti sipon, trangkaso, ken sabsabali a sakit.)' },
+        { name: 'Aspirin', description: 'Used for pain, fever, and swelling. Can also help prevent blood clots (ask a doctor).', descriptionTranslation: '(Usaren para iti sakit, gurigor, ken panagngelngel. Makatulong met a manglapped iti panagbekkel ti dara (agsaludsod iti doktor).)' },
+        { name: 'Alaxan', description: 'Relieves body pain and inflammation from its source. Take as directed.', descriptionTranslation: '(Makatulong a mangpalpak ti sakit ti bagi ken inflammation. Agtumar kas imbilin.)' },
+        { name: 'Bioflu', description: 'Helps relieve fever, cough, runny nose, and body pain.', descriptionTranslation: '(Tumulong nga mangbabaw ti gurigor, uyek, sipon, ken sakit ti bagbagi.)' }
+      ]
+    },
+    {
+      category: 'Blood Pressure Medications',
+      categoryTranslation: '(Agas para iti Alta Presyon)',
+      items: [
+        { name: 'Lisinopril', description: 'Helps relax blood vessels to lower high blood pressure. Take as directed by your doctor.', descriptionTranslation: '(Makatulong a mangpalukneng kadagiti dara ti urat tapno pabassiten ti alta presyon. Agtumar kas imbilin ti doktor.)' },
+        { name: 'Amlodipine', description: 'Works by relaxing blood vessels, making it easier for your heart to pump blood. Used for high blood pressure and chest pain.', descriptionTranslation: '(Agtrabaho babaen ti panangpalukneng kadagiti urat ti dara, a mangpalaka iti panagbomba ti puso iti dara. Usaren para iti alta presyon ken sakit ti barukong.)' },
+        { name: 'Losartan', description: 'Helps relax blood vessels to lower high blood pressure. Important to take regularly.', descriptionTranslation: '(Makatulong a mangpalukneng kadagiti urat ti dara tapno pabassiten ti alta presyon. Importante a regular nga agtumar.)' },
+        { name: 'Calcibloc', description: 'Helps to lower blood pressure and treat heart problems. Consult a doctor for detailed usage.', descriptionTranslation: '(Makatulong a pabassiten ti presyon ti dara ken mangagas kadagiti problema ti puso. Agsaludsod iti doktor para iti naimbag a panagusar.)' }
+      ]
+    },
+    {
+      category: 'Diabetes Medications',
+      categoryTranslation: '(Agas para iti Diabetes)',
+      items: [
+        { name: 'Metformin', description: 'Helps your body use insulin better and lowers sugar made by your liver. For type 2 diabetes.', descriptionTranslation: '(Makatulong iti bagim a nasaysayaat nga usaren ti insulin ken pabassiten ti asukar nga aramiden ti ataymo. Para iti type 2 diabetes.)' },
+        { name: 'Insulin', description: 'A hormone that helps sugar get into your cells for energy. Used for both type 1 and some type 2 diabetes.', descriptionTranslation: '(Maysa a hormone a makatulong iti asukar a sumrek kadagiti selulam para iti enerhiya. Usaren para iti type 1 ken dadduma a type 2 diabetes.)' },
+        { name: 'Gliclazide', description: 'Helps control blood sugar levels for people with type 2 diabetes. Do not skip meals while taking it. Consult a doctor for detailed usage.', descriptionTranslation: '(Makatulong a mangkontrol ti blood sugar levels para kadagiti tao nga adda type 2 diabetes. Saan a laktawan ti makan agraman no agtumar. Agsaludsod iti doktor para iti naimbag a panagusar.)' }
+      ]
+    },
+    {
+      category: 'Antibiotics',
+      categoryTranslation: '(Antibiotiko)',
+      items: [
+        { name: 'Amoxicillin', description: 'Fights bacterial infections like ear infections, strep throat, and pneumonia. Finish the full course even if you feel better.', descriptionTranslation: '(Manglaban kadagiti impeksyon ti bakterya kas iti impeksyon ti lapayag, strep throat, ken pneumonia. Tapusen ti intero a kurso uray no nasaysayaat ti riknam.)' },
+        { name: 'Azithromycin', description: 'Treats various bacterial infections, including some respiratory and skin infections. Take as prescribed.', descriptionTranslation: '(Mangagas kadagiti nadumaduma a impeksyon ti bakterya, agraman dagiti impeksyon ti panaganges ken kudil. Agtumar kas nareseta.)' }
+      ]
+    },
+    {
+      category: 'Antacids',
+      categoryTranslation: '(Antasid)',
+      items: [
+        { name: 'Omeprazole', description: 'Reduces the amount of acid your stomach makes. Used for heartburn and acid reflux.', descriptionTranslation: '(Pabassiten ti kaadu ti asido nga aramiden ti tiyanmo. Usaren para iti heartburn ken acid reflux.)' },
+        { name: 'Ranitidine', description: 'Lowers stomach acid. Helps with heartburn and ulcers. Note: Check with your doctor as it may be recalled in some regions.', descriptionTranslation: '(Pabassiten ti asido ti tiyan. Makatulong iti heartburn ken ulser. Pauna: Agsaludsod iti doktor no naala manen kadagiti dadduma a rehion.)' },
+        { name: 'Maalox', description: 'Relieves heartburn, acid indigestion, and stomach pain. Neutralizes stomach acid. Take after meals and not with other medicines.', descriptionTranslation: '(Makatulong a mangpalpak ti heartburn, acid indigestion, ken sakit ti tiyan. Neutralizes ti asido ti tiyan. Agtumar babaen ti makan ken saan a same time iti sabsabali a agas.)' }
+      ]
+    },
+    {
+      category: 'Vitamins',
+      categoryTranslation: '(Bitamina)',
+      items: [
+        { name: 'Mutilem', description: 'A multivitamin supplement to support overall health. Consult a doctor for detailed usage.', descriptionTranslation: '(Maysa a multivitamin supplement a mangsuporta iti overall health. Agsaludsod iti doktor para iti naimbag a panagusar.)' },
+        { name: 'Vitamin B-Complex', description: 'Supports energy production and nerve health. Common for fatigue and stress relief. Consult a doctor for detailed usage.', descriptionTranslation: '(Mangsuporta iti energy production ken nerve health. Kadawyan para iti panagpangpangawa ken stress relief. Agsaludsod iti doktor para iti naimbag a panagusar.)' }
+      ]
+    },
+    {
+      category: 'Gout',
+      categoryTranslation: '(Agas para iti Gout)',
+      items: [
+        { name: 'Allopurinol', description: 'Reduces uric acid levels to prevent gout attacks. Take as prescribed by a doctor.', descriptionTranslation: '(Pabassiten ti uric acid levels tapno manglapped iti gout attacks. Agtumar kas nareseta ti doktor.)' }
+      ]
+    },
+    {
+      category: 'Anti-Vertigo',
+      categoryTranslation: '(Agas para iti Anti-Vertigo)',
+      items: [
+        { name: 'Betahistine', description: 'Helps reduce dizziness and vertigo symptoms. Consult a doctor for detailed usage.', descriptionTranslation: '(Makatulong a pabassiten ti dizziness ken vertigo symptoms. Agsaludsod iti doktor para iti naimbag a panagusar.)' },
+        { name: 'Cinnarizine', description: 'Treats motion sickness and vertigo. Take before travel if needed. Consult a doctor for detailed usage.', descriptionTranslation: '(Mangagas iti motion sickness ken vertigo. Agtumar a mangrugi no needed para iti travel. Agsaludsod iti doktor para iti naimbag a panagusar.)' },
+        { name: 'Bonamine', description: 'Prevents nausea and vertigo, especially from motion. Consult a doctor for detailed usage.', descriptionTranslation: '(Manglapped iti nausea ken vertigo, agraman iti motion. Agsaludsod iti doktor para iti naimbag a panagusar.)' }
+      ]
+    },
+    {
+      category: 'Fever, Coughs, and Cold',
+      categoryTranslation: '(Gurigor, Uyek, ken Sipon)',
+      items: [
+        { name: 'Neozep', description: 'Used for colds and allergies.', descriptionTranslation: '(Mausar para iti allergy ken sipon.)' },
+        { name: 'Solmux', description: 'Helps to remove phlegm and makes coughing easier.', descriptionTranslation: '(Makatulong nga mangikkat iti plema ken palakaen na iti pinag-uyek.)' },
+        { name: 'Biogesic', description: 'Used to relieve pain, fever, headache, body pain, and even head aches.', descriptionTranslation: '(Mausar para pagpaay iti sakit, gurigor, sakit ti ulo, sakit ti bagbagi, ken uray sakit ti ngipen.)' }
+      ]
+    },
+    {
+      category: 'High Cholesterol',
+      categoryTranslation: '(Nangato nga Cholesterol)',
+      items: [
+        { name: 'Atorvastatin', description: 'Lowers bad cholesterol and helps prevent heart attacks and strokes.', descriptionTranslation: '(Mangibaba ti madi a cholesterol ken tumulong nga mangiliklik iti atake ti puso ken stroke.)' },
+        { name: 'Simvastatin', description: 'Used to control cholesterol levels in the blood and helps keep the heart healthy.', descriptionTranslation: '(Mang-kontrol iti kolesterol iti dara ken tumulong nga agtalinaed a nasayaat ti puso.)' }
+      ]
+    },
+    {
+      category: 'Allergies',
+      categoryTranslation: '(Para Allergies)',
+      items: [
+        { name: 'Cetirizine', description: 'Used to relieve sneezing, runny nose, watery eyes, and allergies.', descriptionTranslation: '(Mausar tapno mapukaw ti pangbaen, panagsaloy ti sipon, agluw-luwa nga mat-mata, ken alerhiya.)' }
+      ]
     }
-    
-    // ===========================
-    // EMERGENCY GUIDE
-    // ===========================
-    function initEmergency() {
-      const emergencies = [
-        {
-          title: 'Dizziness or Lightheadedness',
-          titleTranslation: '(Panagulaw)',
-          keywords: ['Dizziness', 'Maulaw', 'Lightheadedness', 'Agkakapsut'],
-          steps: [
-            { text: 'Sit still or lie down right away.', translation: '(Agtugaw wenno agidda a sigud.)' },
-            { text: 'Drink water or juice slowly.', translation: '(Innayaden nga uminom ti danum wenno juice.)' },
-            { text: 'Take deep, steady breaths.', translation: '(Aganges ti nauneg ken nainnayad.)' },
-            { text: 'Rest until you feel stable before standing again.', translation: '(Aginana aginggana mayat ti rikna sakbay a tumakder manen.)' }
-          ]
-        },
-        {
-          title: 'Fever or Flu',
-          titleTranslation: '(Gurigor)',
-          keywords: ['Trangkaso', 'Gurigor', 'Fever', 'Flu'],
-          steps: [
-            { text: 'Take temperature and note it down.', translation: '(Alaen ti temparatura ti bagi ken tandaanan.)' },
-            { text: 'Drink or eat plenty of fluid like water or soup.', translation: '(Mangan wenno umigop ti addu a danum wennu digo.)' },
-            { text: 'Take paracetamol if fever is high.', translation: '(Agtumar ti paracetamol nu nangato ti gurigor.)' },
-            { text: 'Rest in a cool, quiet room and monitor your condition.', translation: '(Aginana ayanti nalamiis ken naulimek a lugar ken bantayan ti rikriknaem.)' }
-          ]
-        }
-      ];
-      
-      const emergencyList = document.getElementById('emergencyList');
-      const emergencySearch = document.getElementById('emergencySearch');
-      
-      function renderEmergencies(filter = '') {
-        emergencyList.innerHTML = '';
-        const lowerFilter = filter.toLowerCase();
+  ];
+
+  const medicineList = document.getElementById('medicineList');
+  const medicineSearch = document.getElementById('medicineSearch');
+
+  function renderMedicines(filter = '') {
+    medicineList.innerHTML = '';
+    const lowerFilter = filter.toLowerCase();
+    let foundAny = false;
+
+    if (lowerFilter.length < 1) {
+      medicineList.innerHTML = '<div style="text-align: center; padding: 40px; color: #5a6c7d;"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i><p style="margin-bottom: 8px;">Start typing to search for medicines.</p><p class="translation" style="margin: 0;">(Mangrugi nga ag-type tapno agbiruk ti agas.)</p></div>';
+      return;
+    }
+
+    medicines.forEach(category => {
+      const filteredItems = category.items.filter(item => {
+        const lowerName = item.name.toLowerCase();
+        const lowerDesc = item.description.toLowerCase();
+        const lowerDescTrans = item.descriptionTranslation.toLowerCase();
         
-        if (!filter) {
-          // Show all when no filter
-          emergencies.forEach(emergency => {
-            const card = createEmergencyCard(emergency);
-            emergencyList.appendChild(card);
-          });
-          return;
-        }
+        const exactMatch = lowerName === lowerFilter;
+        const substringMatch = 
+          lowerName.includes(lowerFilter) ||
+          lowerDesc.includes(lowerFilter) ||
+          lowerDescTrans.includes(lowerFilter);
         
-        // Filtered view
-        const filtered = emergencies.filter(emergency => {
-          const matchesTitle = emergency.title.toLowerCase().includes(lowerFilter) ||
-                              emergency.titleTranslation.toLowerCase().includes(lowerFilter);
-          const matchesKeywords = emergency.keywords.some(k => k.toLowerCase().includes(lowerFilter));
-          return matchesTitle || matchesKeywords;
-        });
-        
-        if (filtered.length === 0) {
-          emergencyList.innerHTML = '<div class="text-center" style="padding: 40px; color: #666;"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px;"></i><p>No emergencies found. Try a different search.</p><p class="translation">(Awan ti nabirukan nga emerhensya. Padasen ti sabali a panagbiruk.)</p></div>';
-        } else {
-          filtered.forEach(emergency => {
-            const card = createEmergencyCard(emergency);
-            emergencyList.appendChild(card);
-          });
-        }
-      }
-      
-      function createEmergencyCard(emergency) {
-        const card = document.createElement('div');
-        card.className = 'emergency-card';
-        
-        const title = document.createElement('h3');
-        title.innerHTML = `
-          ${emergency.title} <span class="translation">${emergency.titleTranslation}</span>
+        return exactMatch || substringMatch;
+      });
+
+      if (filteredItems.length > 0) {
+        foundAny = true;
+        const catDiv = document.createElement('div');
+        catDiv.className = 'medicine-category';
+
+        const header = document.createElement('div');
+        header.className = 'category-header';
+        header.innerHTML = `
+          <span>${category.category} <span class="translation">${category.categoryTranslation}</span></span>
           <span><i class="fas fa-chevron-down"></i></span>
         `;
-        
-        const stepsDiv = document.createElement('div');
-        stepsDiv.className = 'emergency-steps';
-        stepsDiv.style.display = 'none';
-        
-        const ol = document.createElement('ol');
-        emergency.steps.forEach((step, index) => {
-          const li = document.createElement('li');
-          li.innerHTML = `
-            <span class="step-text">${step.text}</span>
-            <span class="step-translation">${step.translation}</span>
+
+        const content = document.createElement('div');
+        content.className = 'category-content';
+        content.style.display = 'block'; // Always visible when searching
+
+        filteredItems.forEach(item => {
+          const medDiv = document.createElement('div');
+          medDiv.className = 'medicine-item';
+
+          medDiv.innerHTML = `
+            <h4>${item.name} <span class="translation">(${item.name})</span></h4>
+            <p class="step-text">${item.description}</p>
+            <p class="step-translation">${item.descriptionTranslation}</p>
           `;
-          ol.appendChild(li);
+
+          content.appendChild(medDiv);
         });
-        
-        stepsDiv.appendChild(ol);
-        card.appendChild(title);
-        card.appendChild(stepsDiv);
-        
-        // Toggle functionality
-        title.addEventListener('click', () => {
-          stepsDiv.style.display = stepsDiv.style.display === 'none' ? 'block' : 'none';
-          title.querySelector('.fa-chevron-down').style.transform = 
-            stepsDiv.style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)';
-        });
-        
-        return card;
+
+        catDiv.appendChild(header);
+        catDiv.appendChild(content);
+        medicineList.appendChild(catDiv);
       }
-      
-      emergencySearch.addEventListener('input', () => {
-        renderEmergencies(emergencySearch.value);
-      });
-      
-      renderEmergencies();
+    });
+
+    if (!foundAny && lowerFilter.length >= 1) {
+      medicineList.innerHTML = '<div style="text-align: center; padding: 40px; color: #5a6c7d;"><i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i><p style="margin-bottom: 8px;">No medicines found matching your search.</p><p class="translation" style="margin: 0;">(Awan ti agas a kapada ti inaramid mo a panagbiruk.)</p></div>';
     }
+  }
+
+  // Add click event to toggle categories
+  medicineList.addEventListener('click', (e) => {
+    const header = e.target.closest('.category-header');
+    if (header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('.fa-chevron-down');
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.style.transform = 'rotate(0deg)';
+      } else {
+        content.style.display = 'none';
+        icon.style.transform = 'rotate(-90deg)';
+      }
+    }
+  });
+
+  medicineSearch.addEventListener('input', () => {
+    renderMedicines(medicineSearch.value);
+  });
+
+  renderMedicines();
+}
+
+// === Emergency Guide (Step-by-Step) - COMPLETE ===
+function initEmergency() {
+  const emergencies = [
+    {
+      title: 'Dizziness or Lightheadedness',
+      titleTranslation: '(Panagulaw)',
+      keywords: ['Dizziness', 'Maulaw', 'Lightheadedness', 'Agkakapsut'],
+      steps: [
+        { text: 'Sit still or lie down right away.', translation: '(Agtugaw wenno agidda a sigud.)' },
+        { text: 'Drink water or juice slowly.', translation: '(Innayaden nga uminom ti danum wenno juice.)' },
+        { text: 'Take deep, steady breaths.', translation: '(Aganges ti nauneg ken nainnayad.)' },
+        { text: 'Rest until you feel stable before standing again.', translation: '(Aginana aginggana mayat ti rikna sakbay a tumakder manen.)' }
+      ]
+    },
+    {
+      title: 'Fever or Flu',
+      titleTranslation: '(Gurigor)',
+      keywords: ['Trangkaso', 'Gurigor', 'Fever', 'Flu'],
+      steps: [
+        { text: 'Take temperature and note it down.', translation: '(Alaen ti temparatura ti bagi ken tandaanan.)' },
+        { text: 'Drink or eat plenty of fluid like water or soup.', translation: '(Mangan wenno umigop ti addu a danum wennu digo.)' },
+        { text: 'Take paracetamol if fever is high.', translation: '(Agtumar ti paracetamol nu nangato ti gurigor.)' },
+        { text: 'Rest in a cool, quiet room and monitor your condition.', translation: '(Aginana ayanti nalamiis ken naulimek a lugar ken bantayan ti rikriknaem.)' }
+      ]
+    },
+    {
+      title: 'Allergic Reaction',
+      titleTranslation: '(Reaksyon ti Allergy)',
+      keywords: ['allergy', 'reaction', 'anaphylaxis', 'hives', 'swelling'],
+      steps: [
+        { text: 'Move away from what caused the allergy.', translation: '(Umadayo iti naggapwan iti alerhiya.)' },
+        { text: 'Take Cetirizine if symptoms are mild like sneezing or itchy skin.', translation: '(Agtumar ti Cetirizine no haan unay a nakaro ti sintomas kasla panagbaeng ken nabudo a kudil.)' },
+        { text: 'Use the EpiPen if it gets worse or breathing becomes hard.', translation: '(Agusar ti EpiPen nu kumaro wenno magitan ka nga umages.)' },
+        { text: 'Call for help or go to the nearest clinic right away.', translation: '(Tumawag iti tulong wenno mapan ti asideg nga clinic a sigod.)' }
+      ]
+    },
+    {
+      title: 'Scrapes or Cuts',
+      titleTranslation: '(Sugat)',
+      keywords: ['sugat', 'wound', 'cut', 'blood'],
+      steps: [
+        { text: 'Wash hands thoroughly.', translation: '(Bugwan a nasayaat ti im-ima.)' },
+        { text: 'Clean the wound gently with soap and water.', translation: '(Agusar ti sabon ken danum ken innayaden nga dalusan iti sugat.)' },
+        { text: 'Apply antiseptic or alcohol-free wound ointment.', translation: '(Agusar ti antiseptic wenno wound ointemnt nga awan ti alcohol.)' },
+        { text: 'Cover with a clean bandage and change daily.', translation: '(Agusar ti nadalus nga bandage a pangtakkob ti sugat ken suktan nga innaldaw.)' }
+      ]
+    },
+    {
+      title: 'Indigestion',
+      titleTranslation: '(Sakit ti Buksit)',
+      keywords: ['Indigestion', 'Stomach Pain', 'Sakit ti Tiyan'],
+      steps: [
+        { text: 'Stop eating for a few hours. Let your stomach rest.', translation: '(Isardeng ti mangan ti mano nga oras tapno paginanaen ti tiyan.)' },
+        { text: 'Sip water slowly to stay hydrated.', translation: '(Innayaden nga uminom ti danum.)' },
+        { text: 'Eat bland food like rice, banana, or crackers.', translation: '(Mangan ti natatamnay nga makan kasla inapoy, saba, wennu biskwit.)' },
+        { text: 'Take antacid if needed and avoid greasy or spicy foods.', translation: '(Agtumar ti para sakit ti tiyan ken lik-likan ti mangan ti namantika ken naadat nga mak-makan.)' }
+      ]
+    },
+    {
+      title: 'Small Burns (1st Degree Only)',
+      titleTranslation: '(Nasinit)',
+      keywords: ['burns', 'nasinit', 'heat', 'scald'],
+      steps: [
+        { text: 'Cool the burnt area with cool (not icy cold) running water for 10-15 minutes.', translation: '(Palamiisen ti nasinit nga parte ti bagi, agusar iti agtar-taray ken nalamis ngem haan nga agyel-yelo nga danum. Aramiden detuy ti 10-15 a minuto.)' },
+        { text: 'Gently pat dry with a clean towel.', translation: '(Innayaden nga punasan ti nadalus a lupot.)' },
+        { text: 'Apply aloe vera gel or burn cream.', translation: '(Agusar ti aloe vera gel wennu burn cream.)' },
+        { text: 'Leave it loosely covered to heal.', translation: '(Baybay-an a nalukay ti pannakabungon na.)' }
+      ]
+    },
+    {
+      title: 'Joint Pain',
+      titleTranslation: '(Joint Pain)',
+      keywords: ['nasakit', 'joint', 'arthritis', 'nasakit nga joints'],
+      steps: [
+        { text: 'Stop moving the sore area and rest.', translation: '(Pagina-naen wennu haan nga gargarawen iti nasakit a parte.)' },
+        { text: 'Wrap with a bandage or lightly compress.', translation: '(Bungunen ti bandage wennu piriten a nalag-an.)' },
+        { text: 'Apply ice for 15-20 minutes every hour.', translation: '(Ikkan ti yelo iti uneg ti 15-20 nga minuto kada oras.)' },
+        { text: 'Keep it elevated above heart level to reduce swelling.', translation: '(Italinaed nga nangat-ngato ngem ti puso tapno haan nga lumteg.)' }
+      ]
+    },
+    {
+      title: 'Head Ache',
+      titleTranslation: '(Sakit ti Ulo)',
+      keywords: ['sakit ti ulo', 'head ache'],
+      steps: [
+        { text: 'Rest in a quiet, calm, and dark place to relax your eyes.', translation: '(Agin-nana iti naulimek, kalmado, ken nalidem a lugar tapno i-relax ti mata.)' },
+        { text: 'Drink water.', translation: '(Uminum ti danum.)' },
+        { text: 'Avoid bright lights and loud sounds.', translation: '(Umiwas iti nalawag nga silaw ken natatagari nga un-uni.)' },
+        { text: 'Take medicine, specifically pain relievers.', translation: '(Agtumar ti agas lalo iti pain relievers.)' }
+      ]
+    }
+  ];
+
+  const emergencyList = document.getElementById('emergencyList');
+  const emergencySearch = document.getElementById('emergencySearch');
+
+  function renderEmergencies(filter = '') {
+    emergencyList.innerHTML = '';
+    const lowerFilter = filter.toLowerCase();
+    let foundAny = false;
+
+    if (lowerFilter.length < 2) {
+      emergencyList.innerHTML = '<div style="text-align: center; padding: 40px; color: #5a6c7d;"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i><p style="margin-bottom: 8px;">Start typing to search for emergency guides.</p><p class="translation" style="margin: 0;">(Mangrugi nga ag-type tapno agbiruk ti bayabay para iti Saan nga Mapakpakadaan a Pasamak.)</p></div>';
+      return;
+    }
+
+    emergencies.forEach(emergency => {
+      const matchesTitle = emergency.title.toLowerCase().includes(lowerFilter) ||
+                           emergency.titleTranslation.toLowerCase().includes(lowerFilter);
+      const matchesKeywords = emergency.keywords.some(k => k.toLowerCase().includes(lowerFilter));
+      const matchesSteps = emergency.steps.some(step =>
+        step.text.toLowerCase().includes(lowerFilter) ||
+        step.translation.toLowerCase().includes(lowerFilter)
+      );
+      
+      if (!matchesTitle && !matchesKeywords && !matchesSteps) return;
+
+      foundAny = true;
+      const card = document.createElement('div');
+      card.className = 'emergency-card';
+
+      const title = document.createElement('h3');
+      title.innerHTML = `
+        ${emergency.title} <span class="translation">${emergency.titleTranslation}</span>
+        <span><i class="fas fa-chevron-down"></i></span>
+      `;
+
+      const stepsDiv = document.createElement('div');
+      stepsDiv.className = 'emergency-steps';
+      stepsDiv.style.display = 'block'; // Always visible when searching
+
+      const ol = document.createElement('ol');
+      emergency.steps.forEach((step, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span class="step-text">${step.text}</span>
+          <span class="step-translation">${step.translation}</span>
+          ${step.image ? `<img src="${step.image}" alt="Step ${index + 1} for ${emergency.title}: ${step.text.substring(0, 50)}..." class="step-image">` : ''}
+        `;
+        ol.appendChild(li);
+      });
+
+      stepsDiv.appendChild(ol);
+      card.appendChild(title);
+      card.appendChild(stepsDiv);
+      emergencyList.appendChild(card);
+    });
+
+    if (!foundAny && lowerFilter.length >= 2) {
+      emergencyList.innerHTML = '<div style="text-align: center; padding: 40px; color: #5a6c7d;"><i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i><p style="margin-bottom: 8px;">No emergencies found matching your search.</p><p class="translation" style="margin: 0;">(Awan ti emerhensya a kapada ti inaramid mo a panagbiruk.)</p></div>';
+    }
+  }
+
+  // Add click event to toggle emergency steps
+  emergencyList.addEventListener('click', (e) => {
+    const title = e.target.closest('.emergency-card h3');
+    if (title) {
+      const stepsDiv = title.nextElementSibling;
+      const icon = title.querySelector('.fa-chevron-down');
+      if (stepsDiv.style.display === 'none') {
+        stepsDiv.style.display = 'block';
+        icon.style.transform = 'rotate(0deg)';
+      } else {
+        stepsDiv.style.display = 'none';
+        icon.style.transform = 'rotate(-90deg)';
+      }
+    }
+  });
+
+  emergencySearch.addEventListener('input', () => {
+    renderEmergencies(emergencySearch.value);
+  });
+
+  renderEmergencies();
+}
     
     // ===========================
     // EMERGENCY HOTLINES
