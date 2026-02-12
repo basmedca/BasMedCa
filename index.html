@@ -1366,17 +1366,17 @@
         <div class="mission-vision-container">
           <p class="mission-vision">
             <strong>Mission:</strong> To provide accessible basic medical information and tools for everyone. 
-            <span class="translation">(Ti Misyon: Mangipaay ti madanon a basic medical information ken ramit para iti amin.)</span>
+            <span class="translation">(Ti Misyon: Mangited iti madanon a sapasap nga impormasyon maipanggep ti medikal nga banbanag wennu pasamak.)</span>
           </p>
           <p class="mission-vision">
             <strong>Vision:</strong> A world where everyone has access to basic healthcare knowledge. 
-            <span class="translation">(Ti Panagdangad: Ti lubong a pagyanan ti amin ket adda access iti basic healthcare knowledge.)</span>
+            <span class="translation">(Ti Panagdangad: Pannakaadda ti gundaway nga makasursuro iti amin maipanggep ti medikal nga banbanag wennu pasamak.)</span>
           </p>
         </div>
         
         <div class="disclaimer">
           <p><strong>Disclaimer:</strong> We're not medical professionals. The info here is only for basic knowledge about common medicine and simple emergencies. For serious conditions, emergencies, or medicine dosages, always talk to your doctor.</p>
-          <p class="translation">(Disclaimer: Saan kami a propesyonal nga mang-agas. Ti impormasyon ditoy ket para laeng iti basit a pannakaammo maipanggep kadagiti agas ken simple a emergency. No seryoso ti sakit wenno kasapulan ti eksaktong dosage ti agas, agpakita iti doktor mo.)</p>
+          <p class="translation">(Disclaimer: Sikami ket saan a propesyonal nga mang-agas. Dagiti impormasyon nga adda dituy ket bassit lang a pannakaammo maipanggep kadagiti agas ken simple nga peggad. No nakaru iti sakit wenno kasapulan iti eksakto nga sukat iti agas, maymayat nga mapan agpakita iti doctor.)</p>
         </div>
         
         <button id="getStartedBtn" class="btn-primary">
@@ -1452,7 +1452,7 @@
             <div class="form-group">
               <label class="form-label">
                 Frequency
-                <span class="label-translation">(Kasano a Damdamo)</span>
+                <span class="label-translation">(Mamin-ano Nga Uliten)</span>
               </label>
               <select id="frequency" class="alarm-select">
                 <option value="daily">Daily (Inaldaw-aldaw)</option>
@@ -1499,7 +1499,7 @@
               <li>Ensure notifications are enabled</li>
             </ol>
             <span class="translation" style="display: block; margin-top: 10px;">
-              (Importante: Tapno agtrabaho dagiti alarma iti cellphone, pangngaasi: 1. Baybay-an nga aglukat wenno agtrabaho iti background ti BasMedCa 2. I-disable ti battery optimization para iti daytoy nga app iti settings ti cellphone 3. Siguraduem nga enable ti notifications.)
+              (Importante: Tapno gumana a nasayaat ti alarm:1.Baybay-an a nakalukat iti Basmedca (haan ik-ikkaten diay ayan ti tabs(?)2. Ikkaten/I-off/I-disable ti battery optimization para iti daytoy nga app settings ti cellphone.3. Siguraduen nga naka-open wenno napigsa ti notifications.)
             </span>
           </div>
         </div>
@@ -1546,7 +1546,7 @@
         </div>
         
         <h3>Contact Us</h3>
-        <p class="translation">(Makipag-iterate Kamin)</p>
+        <p class="translation">(Kontaken Nakami)</p>
         <div class="contact-email">
           <p><strong>Email us at:</strong></p>
           <p>
@@ -1890,7 +1890,7 @@
             <div class="text-center" style="padding: 30px; color: #666;">
               <i class="fas fa-bell-slash" style="font-size: 2rem; margin-bottom: 15px; color: #90e0ef;"></i>
               <p>No alarms set.</p>
-              <p class="translation">(Awan ti alarma a na-set.)</p>
+              <p class="translation">(Awan ti palagip a na-set.)</p>
               <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
                 Set your first alarm using the form above.
                 <span class="translation">(I-set ti umuna nga alarma babaen ti form iti ngato.)</span>
@@ -2000,7 +2000,7 @@
         if (frequency === 'custom') {
           const selectedDays = getSelectedDays();
           if (selectedDays.length === 0) {
-            showNotification('Please select at least one day for custom frequency.', '(Pilian ti umuna nga aldaw para iti custom frequency.)', 'warning');
+            showNotification('Please select at least one day for custom frequency.', '(Agpili ti aldaw para iti custom frequency.)', 'warning');
             return;
           }
         }
@@ -2319,7 +2319,7 @@
             <i class="fas fa-bell"></i>
           </div>
           <h2 style="color: #0077b6; margin-bottom: 10px;">Medicine Reminder</h2>
-          <p class="translation" style="margin-bottom: 20px;">(Pagpalagip ti Agas)</p>
+          <p class="translation" style="margin-bottom: 20px;">(Pagpalagip ti Panagtumar)</p>
           
           <div style="
             background: #f0f8ff;
@@ -2340,7 +2340,7 @@
           <div class="alarm-controls">
             <button class="alarm-dismiss" id="dismissAlarm">
               <i class="fas fa-check-circle"></i> I've Taken It
-              <span class="translation" style="font-size: 0.8rem;">(Natumar nak)</span>
+              <span class="translation" style="font-size: 0.8rem;">(Nagtumar nakun)</span>
             </button>
             <button class="alarm-snooze" id="snoozeAlarm">
               <i class="fas fa-clock"></i> Snooze 5 min
@@ -2356,7 +2356,7 @@
       document.getElementById('dismissAlarm').addEventListener('click', () => {
         stopAlarmSound();
         modal.remove();
-        showNotification('Medicine recorded ✓', '(Na-rekord ti panagtumar)', 'success');
+        showNotification('Medicine Taken ✓', '(Natumar iti Agas)', 'success');
       });
       
       document.getElementById('snoozeAlarm').addEventListener('click', () => {
